@@ -1,23 +1,66 @@
+undoValue = []
+undoAction = []
+redoValue = []
+redoAction = []
+
 class EventSourcer():
-    # Do not change the signature of any functions
 
     def __init__(self):
         self.value = 0
 
+
     def add(self, num: int):
-        pass
+        self.value += num
+        undoValue.append(num)
+        undoAction.append('+')
 
     def subtract(self, num: int):
-        pass
+        self.value -= num
+        undoValue.append(num)
+        undoAction.append('-')
 
     def undo(self):
-        pass
+    	if len(undoAction) >0:
+	        if undoAction[-1] == '+':
+	            self.value -= undoValue[-1]
+	            temp = undoValue.pop()
+	            redoValue.append(temp)
+	            temp= undoAction.pop()
+	            redoAction.append(temp)
+
+            
+        	elif undoAction[-1] == '-':
+        		self.value += undoValue[-1]
+        		temp = undoValue.pop()
+        		redoValue.append(temp)
+        		temp = undoAction.pop()
+        		redoAction.append(temp)
 
     def redo(self):
-        pass
+    	if len(redoAction) >0:
+	        if redoAction[-1] == '+':
+	            self.value += redoValue[-1]
+	            temp = redoAction.pop()
+	            undoAction.append(temp)
+	            temp = redoValue.pop()
+	            undoValue.append(temp)
+
+	        elif redoAction[-1] == '-':
+	            self.value -= redoValue[-1]
+	            temp = redoAction.pop()
+	            undoAction.append(temp)
+	            temp = redoValue.pop()
+	            undoValue.append(temp)
+        
 
     def bulk_undo(self, steps: int):
-        pass
+        for i in range(0,steps):
+            self.undo()
 
     def bulk_redo(self, steps: int):
-        pass
+        for i in range(0,steps):
+            self.redo()
+
+
+
+
